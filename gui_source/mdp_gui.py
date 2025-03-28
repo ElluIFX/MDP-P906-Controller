@@ -1821,12 +1821,15 @@ class MDPMainwindow(QtWidgets.QMainWindow, FramelessWindow):  # QtWidgets.QMainW
         for item in self.ui.scrollAreaBatSim.findChildren(QtWidgets.QComboBox):
             item.setEnabled(enabled)
 
+    def stop_func_bat_sim(self):
+        self.func_bat_sim_timer.stop()
+        self.set_batsim_widget_enabled(True)
+        self.ui.btnBatSim.setText(self.tr("功能已关闭"))
+
     @QtCore.pyqtSlot()
     def on_btnBatSim_clicked(self):
         if self.func_bat_sim_timer.isActive():
-            self.func_bat_sim_timer.stop()
-            self.set_batsim_widget_enabled(True)
-            self.ui.btnBatSim.setText(self.tr("功能已关闭"))
+            self.stop_func_bat_sim()
         else:
             curve_name = self.ui.comboBatSimCurve.currentText()
             if curve_name not in self._battery_models:
@@ -2159,6 +2162,10 @@ class MDPMainwindow(QtWidgets.QMainWindow, FramelessWindow):  # QtWidgets.QMainW
         if self._seq_type in ("DELAY", "WAIT") or self._seq_index == 0:
             self._seq_time = time.perf_counter()
         return True
+
+    def stop_func_seq(self):
+        self.func_seq_timer.stop()
+        self.seq_btn_enable()
 
     def start_seq(self, loop=False):
         self._seq_loop = loop
